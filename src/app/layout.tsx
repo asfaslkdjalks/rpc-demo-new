@@ -2,7 +2,7 @@ import './globals.css'
 import { type ReactNode } from 'react'
 import { Inter } from 'next/font/google'
 
-import OnchainProviders from './providers'
+import { Providers } from './providers'
 import type { Metadata } from 'next'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -16,7 +16,7 @@ export default function RootLayout(props: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <OnchainProviders>{props.children}</OnchainProviders>
+        <Providers>{props.children}</Providers>
       </body>
     </html>
   )
