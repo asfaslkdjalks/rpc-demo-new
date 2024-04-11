@@ -44,7 +44,7 @@ export function Swap() {
         const txId = await sendTransaction(walletClient, {
           chainId: 84532,
           sender: address,
-          capabilities: { paymasterService: { url: 'http://localhost:3002/api' } },
+          capabilities: { paymasterService: { url: '/api/route' } },
           calls: [
             {
               target: usdc,
