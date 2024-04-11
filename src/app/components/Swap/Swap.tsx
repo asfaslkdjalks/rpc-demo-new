@@ -19,6 +19,8 @@ export function Swap() {
   const { address } = useAccount()
   const { data: status } = useWaitForTransaction({ txId: transactionId })
 
+  console.log(walletClient, address, status)
+
   useEffect(() => {
     const delay = setTimeout(() => {
       setDebouncedAmountIn(amountIn)

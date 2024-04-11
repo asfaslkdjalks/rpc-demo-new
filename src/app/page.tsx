@@ -4,20 +4,36 @@ import { useCallback, useEffect } from 'react'
 import { useAccount, useConnect, useSwitchChain } from 'wagmi'
 import { Swap } from './components/Swap/Swap'
 import { truncateMiddle } from './util/turncateMiddle'
+import { baseSepolia } from 'viem/chains'
+import { reloadIfNeeded } from './util/reloadIfNeeded'
 
 function App() {
-  const { address } = useAccount()
-  const { connectors, connect } = useConnect()
-  const { switchChain } = useSwitchChain()
+
+  const { connectAsync, connectors } = useConnect();
+  const { switchChain } = useSwitchChain();
+  const { address, chain } = useAccount();
 
   useEffect(() => {
-    switchChain({ chainId: 84532 })
-  }, [address, switchChain])
+    console.log('>> switching chain', chain?.id !== baseSepolia.id);
+    console.log('>> address', address);
+    if (address && chain?.id !== baseSepolia.id) {
+      switchChain({ chainId: baseSepolia.id });
+    }
+  }, [address]);
 
-  const handleConnect = useCallback(() => {
-    connect({ connector: connectors[0] })
-  }, [connect, connectors])
+  const handleConnect = useCallback(async () => {
+    const connector = connectors.find((c) => c.type == 'coinbaseWallet');
 
+    if (connector) {
+      console.log('>> connecting', connector.type);
+      try {
+        await connectAsync({ connector });
+      } finally {
+        reloadIfNeeded();
+      }
+    }
+  }, [connectAsync, connectors]);
+  
   return (
     <div className="flex relative flex-col h-screen w-full items-center justify-center bg-zinc-900">
       <span className="absolute top-8 left-12 text-white text-3xl">Swapper</span>

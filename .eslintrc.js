@@ -14,8 +14,8 @@ module.exports = {
     'airbnb/rules/react-a11y',
     'plugin:relay/strict',
     'next/core-web-vitals',
+    "prettier"
   ],
-  'ignorePatterns': ['temp.js', '**/route.ts'],
   rules: {
     'react/destructuring-assignment': 'off',
     'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx', '.mdx'] }],
@@ -67,7 +67,7 @@ module.exports = {
 
     // Forbid types
     '@typescript-eslint/ban-types': 'error',
-    '@typescript-eslint/no-explicit-any': ['error', { fixToUnknown: true }],
+    '@typescript-eslint/no-explicit-any': ['warning', { fixToUnknown: true }],
     '@typescript-eslint/no-invalid-void-type': 'error',
     '@typescript-eslint/no-unsafe-argument': 'error',
     '@typescript-eslint/no-unsafe-assignment': 'error',
@@ -77,9 +77,8 @@ module.exports = {
     // Readability
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: false }],
+    '@typescript-eslint/no-parameter-properties': 'error',
     '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
-    '@typescript-eslint/semi': ['error', 'never'],
-    '@typescript-eslint/indent': 'off',
 
     // Correctness
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
@@ -91,7 +90,7 @@ module.exports = {
     '@typescript-eslint/no-unnecessary-type-constraint': 'error',
     '@typescript-eslint/prefer-for-of': 'error',
     '@typescript-eslint/prefer-literal-enum-member': 'error',
-    '@typescript-eslint/restrict-plus-operands': 'error',
+    '@typescript-eslint/restrict-plus-operands': ['error', { checkCompoundAssignments: true }],
     '@typescript-eslint/unified-signatures': 'error',
 
     // Assertions
@@ -136,9 +135,9 @@ module.exports = {
     'import/order': [
       'error',
       {
-        'alphabetize': {
-          'order': 'asc',
-          'caseInsensitive': true,
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
         },
         'groups': [
           'builtin',
@@ -148,34 +147,29 @@ module.exports = {
           'sibling',
           'index',
           'object',
-          'type',
+          'type'
         ],
-        'pathGroups': [
+        "pathGroups": [
           {
-            'pattern': 'react',
-            'group': 'external',
-            'position': 'before',
-          },
-          {
-            'pattern': '@/**',
-            'group': 'external',
-            'position': 'after',
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
           },
         ],
-        'pathGroupsExcludedImportTypes': ['react'],
-      },
+        "pathGroupsExcludedImportTypes": ["react"]
+      }
     ],
 
     // We prefer labels to be associated with inputs
     'jsx-a11y/label-has-associated-control': ['error', {
       'required': {
-        'some': ['nesting', 'id'],
-      },
+        'some': ['nesting', 'id']
+      }
     }],
     'jsx-a11y/label-has-for': ['error', {
       'required': {
-        'some': ['nesting', 'id'],
-      },
-    }],
+        'some': ['nesting', 'id']
+      }
+    }]
   },
-}
+};

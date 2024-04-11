@@ -13,7 +13,8 @@ type UseGetQuoteProps = {
 }
 
 export function useGetQuote({ amountIn }: UseGetQuoteProps) {
-  const { data: quotedAmount } = useCall({
+  console.log('here')
+  const { data: quotedAmount, error } = useCall({
     to: quoter,
     data: encodeFunctionData({
       abi: Quoter.abi,
@@ -31,6 +32,8 @@ export function useGetQuote({ amountIn }: UseGetQuoteProps) {
     chainId: 8453,
     query: { enabled: !!amountIn && amountIn !== '0' },
   })
+
+  console.log(error)
 
   let amountOut = BigInt(0)
   if (quotedAmount?.data) {

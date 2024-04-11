@@ -13,6 +13,7 @@ export async function OPTIONS() {
 export async function POST(r: NextRequest) {
   const req = await r.json()
   const [userOp, entrypoint] = req.params
+  console.log(entrypoint)
 
   const data = {
     id: 1,

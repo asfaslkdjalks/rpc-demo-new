@@ -1,19 +1,43 @@
-'use client'
+'use client';
 
-import { type ReactNode, useState } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { WagmiProvider } from 'wagmi'
+import { ReactNode } from 'react';
+import { RainbowKitProvider, darkTheme, lightTheme } from '@rainbow-me/rainbowkit';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+import { createWagmiConfig } from '../store/createWagmiConfig';
 
-import { config } from '@/wagmi'
+type Props = { children: ReactNode };
 
-export function Providers(props: { children: ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient())
+const queryClient = new QueryClient();
 
+// TODO Docs ~~~
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? '';
+if (!projectId) {
+  const providerErrMessage =
+    'To connect to all Wallets you need to provide a NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID env variable';
+  throw new Error(providerErrMessage);
+}
+
+const wagmiConfig = createWagmiConfig(projectId);
+
+/**
+ * TODO Docs ~~~
+ */
+function OnchainProviders({ children }: Props) {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        {props.children}
+        <RainbowKitProvider
+          theme={{
+            lightMode: lightTheme(),
+            darkMode: darkTheme(),
+          }}
+        >
+          {children}
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
-  )
+  );
 }
+
+export default OnchainProviders;
