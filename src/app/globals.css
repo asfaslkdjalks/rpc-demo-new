@@ -1,3 +1,197 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.switch-button {
+    background: #FFFFFF;
+    border: none;
+    border-radius: 50%; /* Make it round */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add some shadow */
+    cursor: pointer;
+    /* Adjust the size as needed */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Styling for the token selector button */
+  .token-select-button {
+    background: linear-gradient(90deg, #7B61FF 0%, #9B67FF 100%);
+    border-radius: 20px; /* Adjust as needed for the pill shape */
+    color: white;
+    border: none;
+    padding: 10px 20px; /* Adjust the padding as needed */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .switch-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* This centers the button */
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Make sure it's above the other elements */
+    background-color: rgb(37 99 235);
+    overflow: hidden;
+  }
+
+  .switch-button::after {
+    content: '';
+    position: absolute;
+    top: 0px; /* adjust for desired effect */
+    left: -10px; /* adjust for desired effect */
+    right: 0px; /* adjust for desired effect */
+    bottom: 0px; /* adjust for desired effect */
+    z-index: -1;
+    background: linear-gradient(45deg, rgba(255, 255, 255, .7), transparent);
+  }
+
+
+  .rotate-icon {
+    color: white; /* Match the white color theme */
+    transform: rotate(90deg); /* Rotate the icon 90 degrees */
+    font-size: 16px;
+  }
+
+  .swap-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 350px;
+    padding-left: 85px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background: linear-gradient(0deg, rgb(220, 233, 255), rgb(188, 214, 255));
+    position: absolute;
+    bottom: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    transition: transform 0.3s ease-in-out;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    border: 2px solid rgb(183, 210, 255);
+  }
+  
+  .swap-footer.show {
+    transform: translate(-50%, 80%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .glowing-border {
+    position: relative;
+    z-index: 1;
+    color: white;
+    border: none; /* remove if you don't want a solid border */
+    border-radius: 18px;
+    width: 130px;
+    z-index: -1;
+  }
+  
+  .glowing-border::after {
+    content: '';
+    position: absolute;
+    top: 0px; /* adjust for desired effect */
+    left: 0px; /* adjust for desired effect */
+    right: 0px; /* adjust for desired effect */
+    bottom: 0px; /* adjust for desired effect */
+    background: linear-gradient(45deg, rgba(255, 255, 255, .5), transparent);
+    z-index: -1;
+    border-radius: 18px; /* match your button's border-radius */
+    box-shadow: 0 0 15px 5px rgb(37 99 235 .5); /* this creates the outer glow effect */
+    opacity: 0.7; /* adjust for desired intensity */
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .glowing-border:hover::after {
+    opacity: 1; /* full intensity on hover */
+  }
+
+  .dropdown {
+    z-index: 1000;
+    margin-left: 60px;
+    margin-top: 15px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1), transparent);
+  }
+
+  .dropdown2{
+    z-index:1000;
+    margin-left: 60px;
+    margin-top: -130px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1), transparent);
+  }
+
+.swapper{
+    background: linear-gradient(60deg, rgb(220, 233, 255), rgb(220, 233, 255), rgb(220, 233, 255));
+    z-index: 1000;
+    top: -35px;
+    border: 1px solid rgb(183, 210, 255);
+}
+
+.swapper-header {
+    position: relative;
+    top: 3px;
+    left: -90px;
+  }
+
+  .header-tab {
+    position: relative;
+    opacity: 0;
+    animation: slideInDown 0.5s ease-in-out forwards;
+    top: -30px;
+    left: 90px;
+    background: linear-gradient(180deg, rgb(240, 245, 253), rgb(188, 214, 255));
+    border: 1px solid rgb(183, 210, 255);
+  }
+  
+  @keyframes slideInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .search-bar {
+    position: absolute;
+    top: -17px;
+    left: 8%;
+    width: 370px;
+    border-radius: 12px;
+    background: linear-gradient(-60deg, rgb(201, 222, 255), rgb(232, 241, 255));
+    border: 2px solid rgb(183, 210, 255);
+  }
+
+  .search-bar::placeholder {
+    color: rgba(37, 100, 235, 0.599);
+  }
+
+  .swap-component {
+    background-color: white;
+    width: 450px;
+    height: 410px;
+    border: 2px solid rgb(183, 210, 255);
+    border-radius: 12px;
+    background: linear-gradient(60deg, rgb(232, 241, 255), rgb(188, 214, 255, 1), rgb(232, 241, 255));
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  
+  
