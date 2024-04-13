@@ -5,11 +5,11 @@ Demo project showcasing new RPC methods described [here](https://hackmd.io/@lsr/
 ## Setup
 
 ```bash
-pnpm install
+yarn
 ```
 
 ## Running the dev server
 
 ```bash
-pnpm dev
+yarn dev
 ```
