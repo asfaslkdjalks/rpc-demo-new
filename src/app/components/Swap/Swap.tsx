@@ -1,117 +1,175 @@
-import { type ChangeEvent, useCallback, useEffect, useState } from 'react'
-import { sendTransaction } from 'turboviem/actions'
-import { encodeFunctionData, erc20Abi, parseUnits } from 'viem'
-import { useAccount, useWalletClient } from 'wagmi'
-import { swapperAbi } from '../../abi/swapper'
-import { useGetQuote } from './hooks/useGetQuote'
-import { useWaitForTransaction } from './hooks/useWaitForTransaction'
+import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { sendCalls } from 'viem/experimental';
+import { base } from 'viem/chains';
+import { encodeFunctionData, erc20Abi, parseUnits } from 'viem';
+import { useAccount, useWalletClient } from 'wagmi';
+import { swapperAbi } from '../../abi/swapper';
+import { useGetQuote } from './hooks/useGetQuote';
 
-const swapper = '0xc1461E7A8f29109A8C2C0b60dAa1e12A317075AB'
-const usdc = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'
+const swapper = '0xc1461E7A8f29109A8C2C0b60dAa1e12A317075AB';
+
+const tokenList = [
+  { symbol: 'USDC', address: '0x036CbD53842c5426634e7929541eC2318f3dCF7e', decimals: 6 },
+  { symbol: 'WETH', address: '0x1234567890123456789012345678901234567890', decimals: 18 },
+  // Add more tokens as needed
+];
 
 export function Swap() {
-  const [amountIn, setAmountIn] = useState('0')
-  const [debouncedAmountIn, setDebouncedAmountIn] = useState('0')
-  const [amountOut, setAmountOut] = useState('0')
-  const [transactionId, setTransactionId] = useState('')
-  const { quote } = useGetQuote({ amountIn: debouncedAmountIn })
-  const { data: walletClient } = useWalletClient()
-  const { address } = useAccount()
-  const { data: status } = useWaitForTransaction({ txId: transactionId })
+  const [amountIn, setAmountIn] = useState('0');
+  const [debouncedAmountIn, setDebouncedAmountIn] = useState('0');
+  const [amountOut, setAmountOut] = useState('0');
+  const [transactionId, setTransactionId] = useState('');
+  const [selectedTokenIn, setSelectedTokenIn] = useState(tokenList[0]);
+  const [selectedTokenOut, setSelectedTokenOut] = useState(tokenList[1]);
+  const [isTokenInDropdownOpen, setIsTokenInDropdownOpen] = useState(false);
+  const [isTokenOutDropdownOpen, setIsTokenOutDropdownOpen] = useState(false);
 
-  console.log(walletClient, address, status)
+  const { quote } = useGetQuote({ amountIn: debouncedAmountIn });
+  const { data: walletClient } = useWalletClient({ chainId: 84532 });
+  const { address } = useAccount();
 
   useEffect(() => {
     const delay = setTimeout(() => {
-      setDebouncedAmountIn(amountIn)
-    }, 500)
-    return () => clearTimeout(delay)
-  }, [amountIn])
+      setDebouncedAmountIn(amountIn);
+    }, 500);
+    return () => clearTimeout(delay);
+  }, [amountIn]);
 
   useEffect(() => {
     if (quote) {
-      setAmountOut(Number.parseFloat(quote).toFixed(7))
+      setAmountOut(Number.parseFloat(quote).toFixed(7));
     }
-  }, [quote])
+  }, [quote]);
 
   const handleChangeAmount = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setAmountIn(e.target.value)
-  }, [])
+    setAmountIn(e.target.value);
+  }, []);
 
-  const handleSwap = useCallback(() => {
+  const handleSelectTokenIn = useCallback((token: typeof tokenList[number]) => {
+    setSelectedTokenIn(token);
+    if (token.address === selectedTokenOut.address) {
+      setSelectedTokenOut(selectedTokenIn);
+    }
+    setIsTokenInDropdownOpen(false);
+  }, [selectedTokenIn, selectedTokenOut]);
+
+  const handleSelectTokenOut = useCallback((token: typeof tokenList[number]) => {
+    setSelectedTokenOut(token);
+    if (token.address === selectedTokenIn.address) {
+      setSelectedTokenIn(selectedTokenOut);
+    }
+    setIsTokenOutDropdownOpen(false);
+  }, [selectedTokenIn, selectedTokenOut]);
+
+  const handleSwap = useCallback(async () => {
     if (walletClient && address) {
-      void (async () => {
-        const txId = await sendTransaction(walletClient, {
-          chainId: 84532,
-          sender: address,
-          capabilities: { paymasterService: { url: '/api' } },
+      console.log('handleSwap called');
+      try {
+        const txId = await sendCalls(walletClient, {
+          chain: base,
+          account: address,
+          capabilities: {
+            paymasterService: { url: 'http://localhost:3000/api' },
+          },
           calls: [
             {
-              target: usdc,
+              to: selectedTokenIn.address as `0x${string}`,
               data: encodeFunctionData({
                 abi: erc20Abi,
                 functionName: 'approve',
-                args: [swapper, parseUnits(amountIn, 6)],
+                args: [swapper, parseUnits(amountIn, selectedTokenIn.decimals)],
               }),
             },
             {
-              target: swapper,
+              to: swapper,
               data: encodeFunctionData({
                 abi: swapperAbi,
                 functionName: 'swap',
-                args: [parseUnits(amountIn, 6), parseUnits(quote, 18)],
+                args: [
+                  parseUnits(amountIn, selectedTokenIn.decimals),
+                  parseUnits(quote, selectedTokenOut.decimals),
+                ],
               }),
             },
           ],
-        })
-        setTransactionId(txId)
-      })()
+        });
+        setTransactionId(txId);
+        console.log('Transaction ID:', transactionId);
+      } catch (error) {
+        console.error('Transaction error:', error);
+      }
     }
-  }, [walletClient, address, amountIn, quote])
+  }, [walletClient, address, amountIn, quote, sendCalls, selectedTokenIn, selectedTokenOut]);
 
   return (
     <div className="flex flex-col w-full justify-center items-center space-y-10 h-96 relative">
-      <div className="w-96 h-64 rounded-md shadow-2xl relative bg-zinc-800">
-        <div className="w-full h-full flex flex-col rounded-md shadow-2xl bg-transparent divide-y-2 px-4 divide-white z-10">
-          <div className="flex flex-row w-full h-full justify-between items-center">
-            <input
-              value={amountIn}
-              onChange={handleChangeAmount}
-              className="bg-transparent border-none h-full w-full flex items-center justify-center text-white px-2 text-4xl"
-            />
-            <span className="text-5xl text-white cursor-default inline-block bg-clip-text">
-              USDC
-            </span>
-          </div>
-          <div className="flex flex-row w-full h-full justify-between items-center">
-            <input
-              disabled
-              className="bg-transparent border-none h-full w-full flex items-center justify-center text-white px-2 text-4xl disabled cursor-default"
-              value={amountOut}
-            />
-            <span className="text-5xl text-white cursor-default inline-block bg-clip-text">
-              WETH
-            </span>
-          </div>
+      <div className="w-96 h-64 rounded-2xl shadow-lg relative bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg">
+        <div className="w-full h-full flex flex-col rounded-2xl shadow-lg bg-transparent divide-y divide-white divide-opacity-20 px-4 z-10">
+        <div className="flex flex-row w-full h-full justify-between items-center">
+        <input
+          value={amountIn}
+          onChange={handleChangeAmount}
+          className="bg-transparent border-none h-full w-full flex items-center justify-center text-white px-2 text-4xl focus:outline-none"
+        />
+        <div className="relative">
+          <span
+            className="text-5xl text-white cursor-pointer inline-block bg-clip-text"
+            onClick={() => setIsTokenInDropdownOpen(!isTokenInDropdownOpen)}
+          >
+            {selectedTokenIn.symbol}
+          </span>
+          {isTokenInDropdownOpen && (
+            <div className="absolute top-full mt-2 w-40 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-lg rounded-lg z-20">
+              {tokenList.map((token) => (
+                  <div
+                    key={token.symbol}
+                    className="px-4 py-2 hover:bg-blue-500 hover:bg-opacity-20 cursor-pointer"
+                    onClick={() => handleSelectTokenIn(token)}
+                  >
+                    {token.symbol}
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-row w-full h-full justify-between items-center">
+        <input
+          disabled
+          className="bg-transparent border-none h-full w-full flex items-center justify-center text-white px-2 text-4xl disabled cursor-default focus:outline-none"
+          value={amountOut}
+        />
+        <div className="relative">
+          <span
+            className="text-5xl text-white cursor-pointer inline-block bg-clip-text"
+            onClick={() => setIsTokenOutDropdownOpen(!isTokenOutDropdownOpen)}
+          >
+            {selectedTokenOut.symbol}
+          </span>
+          {isTokenOutDropdownOpen && (
+            <div className="absolute top-full mt-2 w-40 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-lg rounded-lg z-20">
+              {tokenList.map((token) => (
+                  <div
+                    key={token.symbol}
+                    className="px-4 py-2 hover:bg-blue-500 hover:bg-opacity-20 cursor-pointer"
+                    onClick={() => handleSelectTokenOut(token)}
+                  >
+                    {token.symbol}
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </div>
         </div>
       </div>
       <button
         type="button"
         onClick={handleSwap}
-        className="rounded-md bg-zinc-800 text-xl px-8 py-2 shadow-2xl text-white"
+        className="rounded-full bg-blue-500 text-xl px-8 py-4 shadow-md text-white hover:bg-blue-600 transition-colors duration-200"
       >
         Swap
       </button>
-      {status?.receipt?.transactionHash && (
-        <a
-          href={`https://sepolia.basescan.org/tx/${status.receipt.transactionHash}`}
-          target="_blank"
-          rel="noreferrer"
-          className="bg-white text-zinc-800 rounded-md text-xl px-4 py-2 absolute -bottom-10"
-        >
-          View swap
-        </a>
-      )}
     </div>
-  )
+  );
 }

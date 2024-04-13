@@ -1527,9 +1527,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@coinbase/wallet-sdk@npm:@coinbase/wallet-sdk@4.0.0-beta.0":
-  version: 4.0.0-beta.0
-  resolution: "@coinbase/wallet-sdk@npm:4.0.0-beta.0"
+"@coinbase/wallet-sdk@npm:@coinbase/wallet-sdk@4.0.0-beta.6":
+  version: 4.0.0-beta.6
+  resolution: "@coinbase/wallet-sdk@npm:4.0.0-beta.6"
   dependencies:
     buffer: "npm:^6.0.3"
     clsx: "npm:^1.2.1"
@@ -1539,7 +1539,7 @@ __metadata:
     keccak: "npm:^3.0.3"
     preact: "npm:^10.16.0"
     sha.js: "npm:^2.4.11"
-  checksum: 10c0/76ea23073b2f7f62c02170d5aaa08e9aea6f3eebeb9b51828d0bc7dbb7b079f2a96132c801a51ae3c935d3d2a1c5f0ebcc35042c4e2153ca0753c35e3cf54a0f
+  checksum: 10c0/e48b4daf0a4ff752e725c048a02de64108f4f09d5466e893d98132a0ede05231e56397119990826e72bb1090d2130f5771dc6a555fa9c519624368558d4b7b5b
   languageName: node
   linkType: hard
 
@@ -13396,7 +13396,6 @@ __metadata:
     stylelint-order: "npm:^6.0.4"
     tailwindcss: "npm:^3.4.3"
     ts-jest: "npm:^29.1.1"
-    turboviem: "npm:^0.0.4"
     typescript: "npm:~5.3.3"
     unified: "npm:^11.0.4"
     viem: "npm:latest"
@@ -14675,19 +14674,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turboviem@npm:^0.0.4":
-  version: 0.0.4
-  resolution: "turboviem@npm:0.0.4"
-  peerDependencies:
-    typescript: ">=5.0.4"
-    viem: 2.x
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10c0/01e17644b2ddc06ffbf0604798005497c2a5ac3971e8bcfde6614c6c862f7eff92bebba146e2ed4c42e112af5955a9362e216a8cea0a52129c94004930e545ef
-  languageName: node
-  linkType: hard
-
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
@@ -15290,8 +15276,8 @@ __metadata:
   linkType: hard
 
 "viem@npm:latest":
-  version: 2.9.15
-  resolution: "viem@npm:2.9.15"
+  version: 2.9.16
+  resolution: "viem@npm:2.9.16"
   dependencies:
     "@adraffy/ens-normalize": "npm:1.10.0"
     "@noble/curves": "npm:1.2.0"
@@ -15306,7 +15292,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/4b5f60cf85753ef1a3f43091ff5129e3eeb06572d58f5c0caa7065439dc55f8398702882f2fc868d91f994ee800c3fdb857ab77b5a770d174e593601fc86515c
+  checksum: 10c0/832ed60ea8de1eba70dc6bafc1196243836c9ccaa7284e37b35bedf9f8fcfe6e238c30f04408556d7cba7fff80def9ee2b807cff114e8fec885bca9b95b00586
   languageName: node
   linkType: hard
 
