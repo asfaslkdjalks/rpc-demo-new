@@ -3,7 +3,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { decodeAbiParameters, encodeFunctionData, formatUnits, parseAbiParameters, parseUnits } from 'viem'
 import { useCall } from 'wagmi'
 
-// Using L1 addresses to get realistic quotes
+// Using mainnet addresses to get realistic quotes
 const quoter = '0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a'
 const usdc = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
 const weth = '0x4200000000000000000000000000000000000006'
